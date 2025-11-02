@@ -108,6 +108,16 @@ public class BasicController {
         return "basic/link";
     }
 
+    /**
+     * 리터럴
+     */
+
+    @GetMapping("/literal")
+    public String literal(Model model) {
+        model.addAttribute("data", "Thymeleaf!");
+        return "basic/literal";
+    }
+
     @Data
     @AllArgsConstructor
     static class User {
