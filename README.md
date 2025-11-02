@@ -140,12 +140,111 @@ public class HelloBean {
 <p th:text="#{greeting}">메시지 파일 사용</p>
 ```
 
-### 유틸리티 객체
-```html
-<p th:text="${#temporals.format(now, 'yyyy-MM-dd')}">2025-11-02</p>
-<p th:text="${#strings.toUpperCase(name)}">대문자</p>
-<p th:text="${#lists.size(items)}">3</p>
+---
+
+## 6. 유틸리티 객체
+
+### 📌 유틸리티 객체 목록
+
+| 객체 | 용도 |
+|------|------|
+| `#message` | 메시지, 국제화 처리 |
+| `#uris` | URI 이스케이프 |
+| `#dates` | `java.util.Date` 서식 |
+| `#calendars` | `java.util.Calendar` 서식 |
+| `#temporals` | 자바8 날짜 서식 (LocalDate, LocalDateTime) |
+| `#numbers` | 숫자 서식 |
+| `#strings` | 문자 관련 기능 |
+| `#objects` | 객체 관련 기능 |
+| `#bools` | boolean 관련 기능 |
+| `#arrays` | 배열 관련 기능 |
+| `#lists`, `#sets`, `#maps` | 컬렉션 관련 기능 |
+| `#ids` | 아이디 처리 |
+
+---
+
+### 📅 날짜 처리 (#temporals)
+
+### Spring Boot 3.2+
+- `thymeleaf-extras-java8time` 라이브러리 **자동 포함**
+- 별도 설정 불필요
+
+### Controller
+```java
+@GetMapping("/date")
+public String date(Model model) {
+    model.addAttribute("localDateTime", LocalDateTime.now());
+    return "basic/date";
+}
 ```
+
+### Template
+```html
+<h1>LocalDateTime</h1>
+<ul>
+    <!-- 기본 출력 -->
+    <li>default = <span th:text="${localDateTime}"></span></li>
+    
+    <!-- 포맷 지정 -->
+    <li>yyyy-MM-dd HH:mm:ss = 
+        <span th:text="${#temporals.format(localDateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+    </li>
+</ul>
+
+<h1>날짜 유틸리티</h1>
+<ul>
+    <li>일: <span th:text="${#temporals.day(localDateTime)}"></span></li>
+    <li>월(숫자): <span th:text="${#temporals.month(localDateTime)}"></span></li>
+    <li>월(이름): <span th:text="${#temporals.monthName(localDateTime)}"></span></li>
+    <li>월(약어): <span th:text="${#temporals.monthNameShort(localDateTime)}"></span></li>
+    <li>년: <span th:text="${#temporals.year(localDateTime)}"></span></li>
+    <li>요일(숫자): <span th:text="${#temporals.dayOfWeek(localDateTime)}"></span></li>
+    <li>요일(이름): <span th:text="${#temporals.dayOfWeekName(localDateTime)}"></span></li>
+    <li>요일(약어): <span th:text="${#temporals.dayOfWeekNameShort(localDateTime)}"></span></li>
+    <li>시: <span th:text="${#temporals.hour(localDateTime)}"></span></li>
+    <li>분: <span th:text="${#temporals.minute(localDateTime)}"></span></li>
+    <li>초: <span th:text="${#temporals.second(localDateTime)}"></span></li>
+    <li>나노초: <span th:text="${#temporals.nanosecond(localDateTime)}"></span></li>
+</ul>
+```
+
+---
+
+## 💡 자주 사용하는 유틸리티
+
+### 문자열 (#strings)
+```html
+<p th:text="${#strings.toUpperCase(name)}">대문자</p>
+<p th:text="${#strings.toLowerCase(name)}">소문자</p>
+<p th:text="${#strings.length(text)}">길이</p>
+<p th:text="${#strings.substring(text, 0, 5)}">부분 문자열</p>
+<p th:text="${#strings.isEmpty(text)}">비어있는지</p>
+```
+
+### 숫자 (#numbers)
+```html
+<!-- 천 단위 구분, 소수점 2자리 -->
+<p th:text="${#numbers.formatDecimal(price, 0, 'COMMA', 2, 'POINT')}">1,234.56</p>
+
+<!-- 퍼센트 -->
+<p th:text="${#numbers.formatPercent(ratio, 1, 2)}">12.34%</p>
+```
+
+### 리스트 (#lists)
+```html
+<p th:text="${#lists.size(items)}">크기</p>
+<p th:text="${#lists.isEmpty(items)}">비어있는지</p>
+<p th:text="${#lists.contains(items, item)}">포함 여부</p>
+```
+
+---
+
+## 📚 참고 링크
+
+- [유틸리티 객체 공식 문서](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#expression-utility-objects)
+- [유틸리티 객체 예시](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-b-expression-utility-objects)
+
+**💡 Tip:** 필요할 때 문서를 찾아서 사용하면 됩니다!
 
 ---
 
