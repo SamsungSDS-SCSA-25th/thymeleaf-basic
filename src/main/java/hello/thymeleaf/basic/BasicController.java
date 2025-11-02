@@ -1,24 +1,62 @@
 package hello.thymeleaf.basic;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/basic")
 public class BasicController {
 
-    @GetMapping("text-basic")
+    @GetMapping("/text-basic")
     public String textBasic(Model model) {
         model.addAttribute("message", "<b>Hello Thymeleaf!</b>"); // Add a message attribute to the model
         return "basic/text-basic";
     }
 
-    @GetMapping("text-unescaped")
+    @GetMapping("/text-unescaped")
     public String textUnescaped(Model model) {
         model.addAttribute("message", "<b>Hello Thymeleaf!</b>");
         return "basic/text-unescaped";
+    }
+
+    @GetMapping("/variable")
+    public String variable(Model model) {
+
+        User userA = new User("userA", 10);
+        User userB = new User("userB", 20);
+
+        // ArrayList
+        List<User> list = new ArrayList<>();
+        list.add(userA);
+        list.add(userB);
+
+        // HashMap
+        Map<String, User> map = new HashMap<>();
+        map.put("userA", userA);
+        map.put("userB", userB);
+
+        // model에 attribute 전달
+        model.addAttribute("user", userA);
+        model.addAttribute("userList", list);
+        model.addAttribute("userMap", map);
+
+        return "basic/variable";
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class User {
+        private String username;
+        private int age;
     }
 
 }

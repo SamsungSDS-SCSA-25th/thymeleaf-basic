@@ -58,18 +58,23 @@
 
 ## 4. 변수 & SpringEL
 
+### 객체/리스트/맵 접근
+```html
+* 객체
+${user.name}
+
+* 리스트
+${users[0].name}
+
+* 맵
+${userMap['key'].name}
+```
+
 ### 지역 변수 선언
 ```html
 <div th:with="first=${users[0]}">
   <span th:text="${first.username}"></span>
 </div>
-```
-
-### 객체/리스트/맵 접근
-```html
-${user.name}
-${users[0].name}
-${userMap['key'].name}
 ```
 
 ---
