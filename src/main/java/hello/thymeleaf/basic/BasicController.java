@@ -97,6 +97,17 @@ public class BasicController {
         return "basic/date";
     }
 
+    /**
+     * URL 링크 사용하기
+     */
+
+    @GetMapping("/link")
+    public String link(Model model) {
+        model.addAttribute("param1", "data1");
+        model.addAttribute("param2", "data2");
+        return "basic/link";
+    }
+
     @Data
     @AllArgsConstructor
     static class User {

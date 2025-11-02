@@ -248,18 +248,80 @@ public String date(Model model) {
 
 ---
 
-## 7. URL 링크
+## 7. URL 링크 (@{...})
 
+### 기본 문법
+
+### 1. 기본 URL
 ```html
-<!-- 기본 URL -->
 <a th:href="@{/user/list}">목록</a>
-
-<!-- 경로 변수 -->
-<a th:href="@{/user/{id}(id=${user.id})}">상세</a>
-
-<!-- 경로 변수 + 쿼리 파라미터 -->
-<a th:href="@{/items/{id}(id=${item.id}, sort=${sort})}">정렬</a>
+<!-- 결과: /user/list -->
+<!-- 컨텍스트 경로 자동 추가: /myapp/user/list -->
 ```
+
+### 2. 경로 변수 (Path Variable)
+```html
+<a th:href="@{/user/{id}(id=${user.id})}">상세</a>
+<!-- user.id=123 → /user/123 -->
+
+<a th:href="@{/order/{orderId}/item/{itemId}(orderId=${order.id}, itemId=${item.id})}">주문상품</a>
+<!-- order.id=1, item.id=5 → /order/1/item/5 -->
+```
+
+### 3. 쿼리 파라미터
+```html
+<a th:href="@{/user/list(page=${page})}">페이지</a>
+<!-- page=2 → /user/list?page=2 -->
+
+<a th:href="@{/user/list(page=${page}, size=${size})}">페이지</a>
+<!-- page=2, size=10 → /user/list?page=2&size=10 -->
+```
+
+### 4. 경로 변수 + 쿼리 파라미터
+```html
+<a th:href="@{/items/{id}(id=${item.id}, sort=${sort})}">정렬</a>
+<!-- item.id=10, sort=price → /items/10?sort=price -->
+```
+
+---
+
+### 실전 예시
+
+### 페이징
+```html
+<a th:href="@{/products(page=${currentPage - 1})}">이전</a>
+<span th:text="${currentPage}"></span>
+<a th:href="@{/products(page=${currentPage + 1})}">다음</a>
+```
+
+### 검색 + 정렬
+```html
+<a th:href="@{/products(keyword=${keyword}, category=${category}, sort=${sort})}">검색</a>
+<!-- /products?keyword=laptop&category=electronics&sort=price -->
+```
+
+### 폼 액션
+```html
+<form th:action="@{/user/{id}/update(id=${user.id})}" method="post">
+    <button type="submit">수정</button>
+</form>
+```
+
+---
+
+### 핵심 정리
+
+| 표현식 | 예시 | 결과 |
+|--------|------|------|
+| 기본 경로 | `@{/user/list}` | `/user/list` |
+| 경로 변수 | `@{/user/{id}(id=1)}` | `/user/1` |
+| 쿼리 파라미터 | `@{/list(page=1)}` | `/list?page=1` |
+| 둘 다 | `@{/user/{id}(id=1,page=2)}` | `/user/1?page=2` |
+
+**장점:**
+- ✅ 컨텍스트 경로 자동 처리
+- ✅ 특수문자 자동 인코딩
+- ✅ URL 생성 오류 방지
 
 ---
 
