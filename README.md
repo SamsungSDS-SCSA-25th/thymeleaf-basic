@@ -30,15 +30,29 @@
 
 ## 3. 텍스트 출력
 
-### `th:text` vs `th:utext`
-```html
-<!-- HTML 이스케이프 (안전) -->
-<span th:text="${safe}"></span>
+### 이스케이프 `th:text` vs 언이스케이프 `th:utext` 비교
 
-<!-- HTML 언이스케이프 (주의 필요!) -->
-<span th:utext="${html}"></span>
-<!-- 예: <b>bold</b> → 굵은 글씨로 렌더링 -->
+| 구분 | 이스케이프 (Escape) | 언이스케이프 (Unescape) |
+|------|-------------------|----------------------|
+| **처리 방식** | HTML 특수문자를 텍스트로 변환 | HTML을 그대로 렌더링 |
+| **변환 예시** | `<` → `&lt;`, `>` → `&gt;` | 변환 없음 |
+| **입력 예시** | `<script>alert()</script>` | `<script>alert()</script>` |
+| **출력 결과** | 텍스트 그대로 보임 | 스크립트 실행됨 |
+| **보안** | 안전 ✅ | 위험 ⚠️ |
+| **Thymeleaf 문법** | `[[${data}]]` 또는 `th:text` | `[(${data})]` 또는 `th:utext` |
+| **사용 시기** | 사용자 입력 (기본) | 신뢰할 수 있는 HTML만 |
+
+```html
+<!-- 이스케이프 (안전) -->
+<p>[[${userInput}]]</p>
+<p th:text="${userInput}">텍스트</p>
+
+<!-- 언이스케이프 (주의 필요) -->
+<p>[(${adminContent})]</p>
+<p th:utext="${adminContent}">HTML</p>
 ```
+
+> **기본은 이스케이프, 신뢰할 수 있는 HTML만 언이스케이프!**
 
 ---
 
