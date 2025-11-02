@@ -81,28 +81,70 @@ ${userMap['key'].name}
 
 ## 5. 기본 객체
 
-```html
-<!-- 요청 파라미터 -->
-<p th:text="${param.q}"></p>
-
-<!-- 세션 -->
-<p th:text="${session.userId}"></p>
-
-<!-- 스프링 빈 -->
-<p th:text="${@helloBean.hello('Spring')}"></p>
-
-<!-- 로케일 -->
-<p th:text="${#locale}"></p>
-```
+### ⚠️ Spring Boot 3.0+ 변경사항
+**직접 접근 불가:** `${request}`, `${response}`, `${session}`, `${servletContext}`  
+**여전히 작동:** `${param.xxx}`, `${session.xxx}`, `${@bean}`, `${#locale}`
 
 ---
 
-## 6. 날짜/시간 유틸리티
+### 요청 파라미터
+```html
+<!-- URL: /page?q=thymeleaf&ids=1&ids=2 -->
+<p th:text="${param.q}">thymeleaf</p>
+<p th:text="${param.ids[0]}">1</p>
+```
+
+### 세션 속성
+```html
+<p th:text="${session.userId}">세션의 userId</p>
+<div th:if="${session.user != null}">로그인됨</div>
+```
+
+```java
+// Controller에서 세션 설정
+session.setAttribute("userId", "user123");
+```
+
+### Request 정보 (Model 추가 필요)
+```java
+@GetMapping("/info")
+public String info(HttpServletRequest request, Model model) {
+    model.addAttribute("method", request.getMethod());
+    model.addAttribute("url", request.getRequestURL().toString());
+    return "info";
+}
+```
 
 ```html
-<span th:text="${#temporals.format(now, 'yyyy-MM-dd HH:mm:ss')}"></span>
-<span th:text="${#temporals.day(now)}"></span>
-<span th:text="${#temporals.month(now)}"></span>
+<p th:text="${method}">GET</p>
+<p th:text="${url}">http://localhost:8080/info</p>
+```
+
+### 스프링 빈
+```html
+<p th:text="${@helloBean.hello('Spring')}">Hello Spring</p>
+```
+
+```java
+@Component("helloBean")
+public class HelloBean {
+    public String hello(String data) {
+        return "Hello " + data;
+    }
+}
+```
+
+### 로케일
+```html
+<p th:text="${#locale}">ko_KR</p>
+<p th:text="#{greeting}">메시지 파일 사용</p>
+```
+
+### 유틸리티 객체
+```html
+<p th:text="${#temporals.format(now, 'yyyy-MM-dd')}">2025-11-02</p>
+<p th:text="${#strings.toUpperCase(name)}">대문자</p>
+<p th:text="${#lists.size(items)}">3</p>
 ```
 
 ---

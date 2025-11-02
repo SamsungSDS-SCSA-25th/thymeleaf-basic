@@ -1,7 +1,11 @@
 package hello.thymeleaf.basic;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +20,10 @@ import java.util.Map;
 @RequestMapping("/basic")
 public class BasicController {
 
+    /**
+     * 이스케이프 vs 언이스케이프
+     */
+
     @GetMapping("/text-basic")
     public String textBasic(Model model) {
         model.addAttribute("message", "<b>Hello Thymeleaf!</b>"); // Add a message attribute to the model
@@ -27,6 +35,11 @@ public class BasicController {
         model.addAttribute("message", "<b>Hello Thymeleaf!</b>");
         return "basic/text-unescaped";
     }
+
+    /**
+     * springEL 표현 + 지역변수
+     * 변수를 thymeleaf에서 어떻게 사용하는지?
+     */
 
     @GetMapping("/variable")
     public String variable(Model model) {
@@ -50,6 +63,27 @@ public class BasicController {
         model.addAttribute("userMap", map);
 
         return "basic/variable";
+    }
+
+    /**
+     * Thymeleaf에서 http(servlet, session), bean 사용하기
+     */
+
+    @GetMapping("/basic-objects")
+    public String basicObjects(Model model, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) {
+        session.setAttribute("sessionData", "Hello Session");
+        model.addAttribute("request", request);
+        model.addAttribute("response", response);
+        model.addAttribute("servletContext", request.getServletContext());
+        return "basic/basic-objects";
+    }
+
+    @Component("helloBean")
+    static class HelloBean {
+        public String hello(String data) {
+            return "Hello " + data;
+        }
     }
 
     @Data
